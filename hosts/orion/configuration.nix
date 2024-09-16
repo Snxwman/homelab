@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 {
     imports = [
-        # ./hardware-configuration.nix
+        ./hardware-configuration.nix
         # ./jellyfin.nix
     ];
 
@@ -17,15 +17,13 @@
 
     system.stateVersion = "24.05";
 
-    fileSystems."/".device = "/dev/vda";
-
     nix = {
         package = pkgs.nixVersions.latest;
-        trustedBinaryCaches = [
+        settings.trusted-substituters = [
             "http://cache.nixos.org"
         ];
 
-        binaryCaches = [
+        settings.substituters = [
             "http://cache.nixos.org"
         ];
 
@@ -75,6 +73,8 @@
 
     programs.ssh.startAgent = true;
     programs.bash.enableCompletion = true;
+
+    users.groups.admin = {};
 
     users.users.admin = {
         isNormalUser = true;
