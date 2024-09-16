@@ -1,21 +1,26 @@
 { config, pkgs, ... }:
 {
     imports = [
-        ./hardware-configuration.nix
-        ./jellyfin.nix
+        # ./hardware-configuration.nix
+        # ./jellyfin.nix
     ];
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
     networking.hostName = "orion";
+    networking.domain = "snowlab.io";
 
     time.timeZone = "America/New_York";
 
     security.sudo.enable = true;
 
+    system.stateVersion = "24.05";
+
+    fileSystems."/".device = "/dev/vda";
+
     nix = {
-        package = pkgs.nixUnstable;
+        package = pkgs.nixVersions.latest;
         trustedBinaryCaches = [
             "http://cache.nixos.org"
         ];
@@ -25,7 +30,6 @@
         ];
 
         gc.automatic = false;
-        maxJobs = pkgs.stdenv.lib.mkForce 6;
     };
 
     nixpkgs = {
@@ -58,7 +62,6 @@
         bantime = "24hr";
         bantime-increment = {
             enable = true; # Enable increment of bantime after each violation
-            formula = "ban.Time * math.exp(float(ban.Count+1)*banFactor)/math.exp(1*banFactor)";
             multipliers = "1 2 4 8 16 32 64";
             maxtime = "168h"; # Do not ban for more than 1 week
                 overalljails = true; # Calculate the bantime based on all the violations
@@ -71,16 +74,18 @@
     };
 
     programs.ssh.startAgent = true;
-    programs.bash.enableCompletions = true;
+    programs.bash.enableCompletion = true;
 
-    users.extraUsers.admin = {
+    users.users.admin = {
+        isNormalUser = true;
         createHome = false;
+        group = "admin";
         extraGroups = [ "wheel" "audio" "video" "docker" ];
         useDefaultShell = true;
     };
 
     environment.systemPackages = with pkgs; [
         git
-        nvim
+        neovim
     ];
 }
