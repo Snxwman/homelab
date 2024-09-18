@@ -1,5 +1,7 @@
 {}:
 {
+    programs.ssh.startAgent = true;
+
     users.users."admin".openssh.authorizedKeys.keyFiles = [
         ./admin.pub
     ];
@@ -7,9 +9,15 @@
     services.openssh = {
         enable = true;
         ports = [ 22 ];
-        settings.PermitRootLogin = "no";
-        settings.PasswordAuthentication = false;
-        settings.KbdInteractiveAuthentication = false;
+        openFirewall = true;
+        settings = {
+            PermitRootLogin = "no";
+            PasswordAuthentication = false;
+            KbdInteractiveAuthentication = false;
+            AllowUsers = [
+                "admin"
+            ];
+        };
     };
 
     services.fail2ban = {
