@@ -3,7 +3,7 @@
     imports = [
         ./hardware-configuration.nix
         # ./disko.nix
-        # ./modules/default-configuration.nix
+        ./modules/default-configuration.nix
         ./modules/ssh.nix
         ./modules/containers/jellyfin.nix
         ./modules/users/admin.nix
