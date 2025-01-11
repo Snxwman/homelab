@@ -2,9 +2,9 @@
 {
     programs.ssh.startAgent = true;
 
-    users.users."admin".openssh.authorizedKeys.keyFiles = [
-        ./admin.pub
-    ];
+    # users.users."admin".openssh.authorizedKeys.keyFiles = [
+    #     ./admin.pub
+    # ];
 
     services.openssh = {
         enable = true;
@@ -12,7 +12,7 @@
         openFirewall = true;
         settings = {
             PermitRootLogin = "no";
-            PasswordAuthentication = false;
+            PasswordAuthentication = true;
             KbdInteractiveAuthentication = false;
             AllowUsers = [
                 "admin"

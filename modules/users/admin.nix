@@ -3,11 +3,12 @@
     users.groups.admin = {};
 
     users.users.admin = {
-        isNormalUser = true;
-        createHome = true;
         name = "admin";
         uid = 1000;
+        isNormalUser = true;
+        createHome = true;
         useDefaultShell = true;
+        initialPassword = "admin";
 
         group = "admin";
         extraGroups = [ 

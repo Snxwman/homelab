@@ -18,7 +18,7 @@
 
     security.sudo.enable = true;
 
-    services.xserver.layout = "us";
+    services.xserver.xkb.layout = "us";
 
     time.timeZone = "America/New_York";
 
@@ -48,7 +48,7 @@
         allowReboot = true;
     };
 
-    programs.bash.enableCompletion = true;
+    programs.bash.completion.enable = true;
 
     environment.systemPackages = with pkgs; [
         git
