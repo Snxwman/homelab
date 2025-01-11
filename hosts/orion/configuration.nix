@@ -3,10 +3,11 @@
     imports = [
         ./hardware-configuration.nix
         # ./disko.nix
-        ./modules/default-configuration.nix
+        # ./modules/default-configuration.nix
         ./modules/containers/jellyfin.nix
         ./modules/users/admin.nix
     ];
+
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
@@ -14,11 +15,11 @@
     networking.hostName = "orion";
     networking.domain = "snowlab.io";
 
-    time.timeZone = "America/New_York";
-
     security.sudo.enable = true;
 
-    system.stateVersion = "24.05";
+    services.xserver.layout = "us";
+
+    time.timeZone = "America/New_York";
 
     nix = {
         package = pkgs.nixVersions.latest;
@@ -40,6 +41,7 @@
         };
     };
 
+    system.stateVersion = "24.11";
     system.autoUpgrade = {
         enable = true;
         allowReboot = true;
