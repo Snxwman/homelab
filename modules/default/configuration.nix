@@ -40,6 +40,7 @@
     ];
 
     security.sudo.enable = true;
+    users.mutableUsers = false;
     programs.bash.completion.enable = true;
 
     virtualisation.oci-containers.backend = "docker";
