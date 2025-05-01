@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, ... }:
 {
     users.users.admin = {
         isNormalUser = true;

@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, ... }:
 {
     imports = [
         /homelab/modules/default/firewall.nix

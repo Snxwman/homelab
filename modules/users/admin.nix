@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, ... }:
 {
     users.groups.admin = {
         gid = 1000;
