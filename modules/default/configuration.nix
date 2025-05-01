@@ -34,7 +34,7 @@
         options = "--delete-older-than 180d";
     };
 
-    nix.settings.expirimental-features = [
+    nix.settings.experimental-features = [
         "nix-command"
         "flakes"
     ];
