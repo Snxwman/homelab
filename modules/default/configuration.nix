@@ -12,7 +12,7 @@
 
     i18n.defaultLocale = "en_US.UTF-8";
 
-    system.copySystemConfigurtion = true;
+    system.copySystemConfiguration = true;
 
     nixpkgs.config.allowUnfree = true;
     environment.systemPackages = with pkgs; [
