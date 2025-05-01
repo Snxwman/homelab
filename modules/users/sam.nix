@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-    users.users.admin = {
+    users.users.sam = {
         isNormalUser = true;
         name = "sam";
         uid = 1001;

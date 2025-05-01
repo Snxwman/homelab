@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-    users.users.admin = {
+    users.users.name = {
         isNormalUser = true;
         name = "";
         # uid = 1002;  # NOTE: Must be greater than 1002
