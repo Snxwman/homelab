@@ -1,22 +1,18 @@
 { pkgs }:
 {
-    users.groups.admin = {
-        gid = 1000;
-    };
-
     users.users.admin = {
         isNormalUser = true;
-        name = "admin";
-        uid = 1000;
-        description = "Shared Admin Account";
+        name = "sam";
+        uid = 1001;
+        description = "Sam Kopp";
 
         # cryptHomeLuks = "";  # TODO:
         createHome = true;
-        home = "/home/admin";
-        homeMode = "770";
+        home = "/home/sam";
+        homeMode = "700";
         
-        useDefaultShell = true;
-        hashedPasswordFile = /homelab/secrets/admin.passwd;
+        useDefaultShell = true;  # TODO: switch to zsh
+        hashedPasswordFile = /homelab/secrets/sam.passwd;
 
         group = "admin";
         extraGroups = [ 
@@ -28,8 +24,9 @@
 
         packages = with pkgs; [];
         
+        programs.ssh.startAgent = true;
         openssh.authorizedKeys.keyFiles = [
-            /homelab/secrets/io.snowlab_admin.pub
+            /homelab/secrets/io.snowlab_sam.pub
         ];
     };
 }
