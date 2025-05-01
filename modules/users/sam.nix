@@ -24,9 +24,10 @@
 
         packages = with pkgs; [];
         
-        programs.ssh.startAgent = true;
         openssh.authorizedKeys.keyFiles = [
             /homelab/secrets/io.snowlab_sam.pub
         ];
     };
+
+    programs.ssh.startAgent = true;
 }

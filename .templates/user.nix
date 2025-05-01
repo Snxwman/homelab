@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, ... }:
 {
     users.users.admin = {
         isNormalUser = true;
@@ -24,9 +24,10 @@
 
         packages = with pkgs; [];
         
-        programs.ssh.startAgent = true;
         openssh.authorizedKeys.keyFiles = [
             # /homelab/secrets/
         ];
     };
+
+    programs.ssh.startAgent = true;
 }
