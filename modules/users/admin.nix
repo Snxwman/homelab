@@ -16,7 +16,7 @@
         homeMode = "770";
         
         useDefaultShell = true;
-        hashedPasswordFile = /homelab/secrets/admin.passwd;
+        hashedPasswordFile = "/homelab/secrets/admin.passwd";
 
         group = "admin";
         extraGroups = [ 

@@ -12,7 +12,7 @@
         homeMode = "700";
         
         useDefaultShell = true;  # TODO: switch to zsh
-        hashedPasswordFile = /homelab/secrets/sam.passwd;
+        hashedPasswordFile = "/homelab/secrets/sam.passwd";
 
         group = "admin";
         extraGroups = [ 
