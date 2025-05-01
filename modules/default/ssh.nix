@@ -1,7 +1,7 @@
-{ pkgs }:
+{ pkgs, ... }:
 {
     environment.systemPackages = with pkgs; [
-        pkgs.openssh
+        openssh
     ];
 
     networking.firewall = {

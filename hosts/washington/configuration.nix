@@ -2,7 +2,7 @@
 {
     imports = [
         /homelab/hosts/washington/hardware-configuration.nix
-        /homelab/hosts/washington/filesystem.nix
+        # /homelab/hosts/washington/filesystem.nix
 
         /homelab/modules/default/configuration.nix
         /homelab/modules/default/firewall.nix
