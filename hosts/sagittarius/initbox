@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+HOST_NAME="rp1.snowlab.io"
+
+ADMIN_NAME="snowlab.io Admin"
+ADMIN_SSH_KEY="https://raw.githubusercontent.com/Snxwman/homelab/refs/heads/main/secrets/io.snowlab_admin.pub"
+ADMIN_PASSWD='$6$TIOnUtkOybWg2AaU$Z6Hv/ZhdzUmv.v2LRlnS7CTVLUZE.RnNGehXx895MQv/zCMErcRKWvrcui79TxvYoz4.EHtCYzu.pZAwh2/i.'
+
+SAM_NAME="Sam Kopp"
+SAM_SSH_KEY="https://raw.githubusercontent.com/Snxwman/homelab/refs/heads/main/secrets/io.snowlab_sam.pub"
+SAM_PASSWD='$6$7hZGnFFB4wpKB1U8$vUfqHzbH4POS8QF7Fl.DwNR1h9pVglAL0rJNYHTC3izEr0axUcdxicGi16pANgSB3bkH77hoxDFxV47T/0q2X/'
+
+# BUG: Doesn't work on Alpine
+install_linode_longview() {
+    apk add \
+        gcc libc6-compat make \
+        perl perl-b-cow perl-clone perl-dev perl-http-cookies perl-http-daemon \
+        perl-http-message perl-http-negotiate perl-html-parser perl-socket6 perl-utils
+
+    # WARN: MUST GET A FRESH LONGVIEW INSTALL LINK EVERY RUN
+    curl -s https://lv.linode.com/162086DC-252E-417F-BEB4642720A46A64 | sudo bash
+}
+
+# System config
+apk update && apk upgrade
+
+setup-hostname -n "$HOST_NAME"
+setup-dns -d "1.1.1.1" -d "1.0.0.1"
+
+apk add bash-completion
+apk add audit doas fail2ban git iptables logroate ufw
+
+rc-update add fail2ban
+rc-service fail2ban start
+
+rc-service ip6tables save
+rc-update add ip6tables
+rc-service ip6tables start
+
+rc-update add ufw
+ufw default deny incoming
+ufw default deny outgoing
+ufw allow 22/tcp
+ufw allow 80
+ufw allow 81 comment "npm dashboard"
+ufw allow out 123/udp comment NTP
+ufw allow out 53/udp
+ufw allow 443
+ufw limit SSH
+ufw limit 81
+ufw enable
+
+# Create groups and users
+groupadd --system docker
+groupadd --system npm
+
+setup-user -a -u -f "$ADMIN_NAME" -k "$ADMIN_SSH_KEY" -g docker admin
+usermod --shell bash --password "$ADMIN_PASSWD"
+
+setup-user -a -u -f "$SAM_NAME" -k "$SAM_SSH_KEY" -g docker sam
+usermod --shell bash --password "$SAM_PASSWD"
+
+useradd \
+    --system \
+    --comment "Nginx Proxy Manager" \
+    --shell /sbin/nologin \
+    --gid npm \
+    --groups docker \
+    --no-user-group \
+    --no-create-home \
+    npm
+
+# User packages
+apk add neovim
+
+# Application packages and services
+apk add docker docker-cli-compose
+rc-update add docker
+rc-service docker start
+
+# Filesystem setup
+mkdir --parents /srv/npm/data/nginx/custom
+mkdir /srv/npm/certs
+mkdir /snowlab
+
+git clone https://github.com/Snxwman/homelab/ /snowlab
+chown -R 777 /snowlab
+cd /snowlab
+ln -s /snowlab/users/sam.bashrc /home/sam/.bashrc
+ln -s /snowlab/hosts/sagittarius/nginx/root_top.conf /srv/npm/data/nginx/custom/
+ln -s /snowlab/hosts/sagittarius/docker-compose.yaml /home/sam/

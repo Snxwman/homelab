@@ -1,0 +1,42 @@
+# secrets:
+#   # Secrets are single-line text files where the sole content is the secret
+#   # Paths in this example assume that secrets are kept in local folder called ".secrets"
+#   DB_ROOT_PWD:
+#     file: .secrets/db_root_pwd.txt
+#   MYSQL_PWD:
+#     file: .secrets/mysql_pwd.txt
+
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+
+    environment:
+      PUID: 1000
+      PGID: 1000
+      # Uncomment this if you want to change the location of
+      # the SQLite DB file within the container
+      # DB_SQLITE_FILE: "/data/database.sqlite"
+
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+
+    volumes:
+      - /srv/npm/data:/data
+      - /srv/npm/certs:/etc/letsencrypt
+      # - ./logrotate.custom:/etc/logrotate.d/nginx-proxy-manager
+
+    networks:
+      default:
+        external: true
+        name: srvnet
+
+    healthcheck:
+      test: ["CMD", "/usr/bin/check-health"]
+      interval: 10s
+      timeout: 3s

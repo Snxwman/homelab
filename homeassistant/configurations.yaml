@@ -1,0 +1,84 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+sensor:
+  - platform: bitcoin
+    display_options:
+      - exchangerate
+      - trade_volume_btc
+      - miners_revenue_usd
+      - btc_mined
+      - trade_volume_usd
+      - difficulty
+      - minutes_between_blocks
+      - number_of_transactions
+      - hash_rate
+      - timestamp
+      - mined_blocks
+      - blocks_size
+      - total_fees_btc
+      - total_btc_sent
+      - estimated_btc_sent
+      - total_btc
+      - total_blocks
+      - next_retarget
+      - estimated_transaction_volume_usd
+      - miners_revenue_btc
+      - market_price_usd
+
+input_select:
+  vornado_speed:
+    name: Vornado Fan Speed
+    options:
+      - Off
+      - Low
+      - Medium
+      - High
+      - Turbo
+    initial: Medium
+    icon: mdi:fan
+    
+fan:
+  - platform: template
+    fans:
+      vornado:
+        friendly_name: "Vornado"
+        value_template: "{{ not is_state('input_select.vornado_speed', 'Off') }}"
+        preset_mode_template: "{{ states('input_select.vornado_speed') }}"
+        turn_on:
+          service: fan.set_preset_mode
+          data:
+            preset_mode: "Medium"
+          target:
+            entity_id: fan.vornado
+        turn_off:
+          service: fan.set_preset_mode
+          data:
+            preset_mode: "Off"
+          target:
+            entity_id: fan.vornado
+        set_preset_mode:
+          - service: input_select.select_option
+            data:
+              option: "{{ preset_mode }}"
+            target:
+              entity_id: input_select.vornado_speed
+          - service: media_player.play_media
+            data:
+              entity_id: media_player.this_device
+              media_content_type: routine
+              media_content_id: Alexa Vornado {{ preset_mode }}
+        preset_modes:
+          - "Off"
+          - "Low"
+          - "Medium"
+          - "High"
+          - "Turbo"

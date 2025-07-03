@@ -10,12 +10,12 @@
         createHome = true;
         home = "/home/...";
         homeMode = "700";
-        
+
         useDefaultShell = true;
         hashedPasswordFile = "/homelab/secrets/";
 
         group = "admin";
-        extraGroups = [ 
+        extraGroups = [
             "wheel"
             "audio"
             "video"
@@ -23,7 +23,7 @@
         ];
 
         packages = with pkgs; [];
-        
+
         openssh.authorizedKeys.keyFiles = [
             # /homelab/secrets/
         ];

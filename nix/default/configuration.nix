@@ -16,7 +16,28 @@
 
     nixpkgs.config.allowUnfree = true;
     environment.systemPackages = with pkgs; [
+        # System tools
+        cryptsetup
+        file
+        lsof
+        ltrace
+        strace
+        dig
+        usbutils
+        lshw
+        dmidecode
+        pciutils
+        f3
+        hdparm
+        nvme-cli
+        smartmontools
+        testdisk
+        nettools
+        inetutils  # Ping
+        
+        # User applications
         git
+        parted
         neovim
         zsh
     ];
