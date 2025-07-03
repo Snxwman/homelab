@@ -24,11 +24,13 @@ install_linode_longview() {
 # System config
 apk update && apk upgrade
 
-setup-hostname -n "$HOST_NAME"
-setup-dns -d "1.1.1.1" -d "1.0.0.1"
+echo "$HOST_NAME" > /etc/hostname
+hostname -F /etc/hostname
+# Must disable 'Auto-configure networking' in the Linode config profile
+# setup-dns -d "1.1.1.1" -d "1.0.0.1"
 
 apk add bash-completion
-apk add audit doas fail2ban git iptables logroate ufw
+apk add audit doas fail2ban git iptables logrotate ufw
 
 rc-update add fail2ban
 rc-service fail2ban start
@@ -37,28 +39,37 @@ rc-service ip6tables save
 rc-update add ip6tables
 rc-service ip6tables start
 
+# have to reboot here to get ufw to recognize ip6tables
+
 rc-update add ufw
 ufw default deny incoming
 ufw default deny outgoing
-ufw allow 22/tcp
-ufw allow 80
-ufw allow 81 comment "npm dashboard"
-ufw allow out 123/udp comment NTP
+ufw allow in 22/tcp
+ufw allow in 80
+ufw allow in 81 comment "npm dashboard"
+ufw allow in 443
 ufw allow out 53/udp
-ufw allow 443
-ufw limit SSH
-ufw limit 81
+ufw allow out 80
+ufw allow out 123/udp comment NTP
+ufw allow out 443
 ufw enable
+# CRIT: Must manually add these to /etc/ufw/before.rules
+## allow outbound icmp
+#-A ufw-before-output -p icmp -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+#-A ufw-before-output -p icmp -m state --state ESTABLISHED,RELATED -j ACCEPT
+# Then run
+# ufw reload
+rc-service ufw start
 
 # Create groups and users
 groupadd --system docker
 groupadd --system npm
 
 setup-user -a -u -f "$ADMIN_NAME" -k "$ADMIN_SSH_KEY" -g docker admin
-usermod --shell bash --password "$ADMIN_PASSWD"
+usermod --shell /bin/bash --password "$ADMIN_PASSWD" admin
 
 setup-user -a -u -f "$SAM_NAME" -k "$SAM_SSH_KEY" -g docker sam
-usermod --shell bash --password "$SAM_PASSWD"
+usermod --shell /bin/bash --password "$SAM_PASSWD" sam
 
 useradd \
     --system \
@@ -88,4 +99,3 @@ chown -R 777 /snowlab
 cd /snowlab
 ln -s /snowlab/users/sam.bashrc /home/sam/.bashrc
 ln -s /snowlab/hosts/sagittarius/nginx/root_top.conf /srv/npm/data/nginx/custom/
-ln -s /snowlab/hosts/sagittarius/docker-compose.yaml /home/sam/
