@@ -95,7 +95,6 @@ mkdir /srv/npm/certs
 mkdir /snowlab
 
 git clone https://github.com/Snxwman/homelab/ /snowlab
-chown -R 777 /snowlab
 cd /snowlab
 ln -s /snowlab/users/sam.bashrc /home/sam/.bashrc
 ln -s /snowlab/hosts/sagittarius/nginx/root_top.conf /srv/npm/data/nginx/custom/

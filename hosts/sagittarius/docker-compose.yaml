@@ -31,10 +31,10 @@ services:
       - /srv/npm/certs:/etc/letsencrypt
       # - ./logrotate.custom:/etc/logrotate.d/nginx-proxy-manager
 
-healthcheck:
-  test: ["CMD", "/usr/bin/check-health"]
-  interval: 10s
-  timeout: 3s
+    healthcheck:
+      test: ["CMD", "/usr/bin/check-health"]
+      interval: 10s
+      timeout: 3s
 
 networks:
   default:
